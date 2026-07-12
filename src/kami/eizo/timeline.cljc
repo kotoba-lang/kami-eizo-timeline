@@ -73,6 +73,19 @@
   [tl]
   (reduce max 0 (map track-duration (:timeline/tracks tl))))
 
+(defn clip-at-frame
+  "The clip on track `t` covering global timeline frame `frame`
+  (`:clip/timeline-start` inclusive, `clip-end` exclusive), or nil if no
+  clip on this track covers it (a gap, or `frame` past the track's end).
+  This is the frame/timecode math a render pass needs to answer \"what
+  clip is live at frame N\" — callers should derive frame ranges from this
+  rather than re-deriving `:clip/timeline-start`/`clip-end` arithmetic
+  themselves (see kami-eizo-timeline's render-proof E2E, test/e2e/)."
+  [t frame]
+  (first (filter (fn [c] (and (<= (:clip/timeline-start c) frame)
+                               (< frame (clip-end c))))
+                  (:track/clips t))))
+
 (defn- transition-for
   "The transition (if any) bridging `from-clip-id` -> `to-clip-id`."
   [t from-clip-id to-clip-id]
