@@ -65,3 +65,33 @@
         result (tl/validate-timeline (tl/timeline {:timebase bad-tb :tracks []}))]
     (is (false? (:valid? result)))
     (is (some #(= :timebase/drop-frame-ineligible (:problem/type %)) (:errors result)))))
+
+(deftest clip-at-frame-finds-covering-clip
+  (let [vt (sample-video-track)] ; c1 [0,120) c2 [105,195) c3 [185,335)
+    (is (= :v1 (:clip/id (tl/clip-at-frame vt 0))))
+    (is (= :v1 (:clip/id (tl/clip-at-frame vt 119))))
+    ;; c1/c2 overlap by 15 frames (their dissolve): both clips are technically
+    ;; "live" there, so clip-at-frame returns whichever the track lists first
+    ;; for a covered frame in the overlap region -- the important guarantee
+    ;; is that it always returns *a* covering clip, never nil, inside [105,120).
+    (is (some? (tl/clip-at-frame vt 110)))
+    (is (= :v3 (:clip/id (tl/clip-at-frame vt 334))))))
+
+(deftest clip-at-frame-returns-nil-outside-any-clip
+  (let [c1 (tl/clip {:id :v1 :source-id :src-a :source-in 0 :source-out 10 :timeline-start 0})
+        c2 (tl/clip {:id :v2 :source-id :src-b :source-in 0 :source-out 10 :timeline-start 20}) ; gap [10,20)
+        vt (tl/track {:id :video-1 :type :video :clips [c1 c2]})]
+    (is (some? (tl/clip-at-frame vt 5)))
+    (is (nil? (tl/clip-at-frame vt 15))) ; inside the gap
+    (is (some? (tl/clip-at-frame vt 25)))
+    (is (nil? (tl/clip-at-frame vt 30))) ; one past c2's end
+    (is (nil? (tl/clip-at-frame vt -1)))))
+
+(deftest clip-at-frame-exact-hard-cut-boundary
+  ;; Two abutting clips with no gap and no transition (a hard cut) -- the
+  ;; boundary frame must land on the second clip exactly, never the first.
+  (let [c1 (tl/clip {:id :a :source-id :src-red   :source-in 0 :source-out 5  :timeline-start 0})
+        c2 (tl/clip {:id :b :source-id :src-green :source-in 0 :source-out 5  :timeline-start 5})
+        vt (tl/track {:id :video-1 :type :video :clips [c1 c2]})]
+    (is (= :a (:clip/id (tl/clip-at-frame vt 4))))
+    (is (= :b (:clip/id (tl/clip-at-frame vt 5))))))
