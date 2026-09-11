@@ -70,7 +70,7 @@ path `utsushi`/`douga` will eventually wire onto this IR — see "v0 scope"
 above.
 
 It builds directly on `kotoba-lang/org-w3-webcodecs`'s own real-browser
-WebCodecs E2E proof (`org-w3-webcodecs` `test/e2e/run_e2e.cljs`,
+WebCodecs E2E proof (`org-w3-webcodecs` `test/e2e/run_e2e.cljk`,
 commit `b14dc397e248`) — same nbb+Playwright harness pattern, same local
 HTTP server (WebCodecs needs a secure context; `about:blank`/`file:` don't
 expose `VideoDecoder`/`VideoEncoder`), same real headless Chromium, same
@@ -117,7 +117,7 @@ bash scripts/build-e2e-bundle.sh           # compiles kami.eizo.timeline.e2e.ent
                                             # (JVM/Clojure CLI build step, not an
                                             # app-runtime choice — see
                                             # scripts/build-e2e-bundle.sh)
-nbb test/e2e/run_e2e.cljs
+nbb test/e2e/run_e2e.cljk
 ```
 
 Exits 0 and prints the JSON result (per-frame expected vs. decoded RGB,
