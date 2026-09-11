@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Compiles test/e2e/src/kami/eizo/timeline/e2e/entry.cljs (which pulls in
+# Compiles test/e2e/src/kami/eizo/timeline/e2e/entry.cljk (which pulls in
 # both kami.eizo.timeline's portable timeline/frame query layer and
 # org-w3-webcodecs's raw WebCodecs binding) ->
 # test/e2e/page/render-proof-bundle.js for the browser render-proof E2E
