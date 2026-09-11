@@ -117,7 +117,7 @@ bash scripts/build-e2e-bundle.sh           # compiles kami.eizo.timeline.e2e.ent
                                             # (JVM/Clojure CLI build step, not an
                                             # app-runtime choice — see
                                             # scripts/build-e2e-bundle.sh)
-nbb test/e2e/run_e2e.cljk
+kbb --backend sci test/e2e/run_e2e.cljk
 ```
 
 Exits 0 and prints the JSON result (per-frame expected vs. decoded RGB,
@@ -132,8 +132,8 @@ The `:e2e` deps.edn alias takes `org-w3-webcodecs` as a real git dependency
 ## Test
 
 ```bash
-clojure -M:test
-clojure -M:lint
+kbb -M:test
+kbb -M:lint
 ```
 
 ## License
