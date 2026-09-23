@@ -9,3 +9,4 @@
 # scripts/build-e2e-bundle.sh + npm --prefix test/e2e install)
 test/e2e/node_modules/
 test/e2e/page/render-proof-bundle.js
+.nbb/

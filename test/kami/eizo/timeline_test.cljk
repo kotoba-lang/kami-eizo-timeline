@@ -1,7 +1,7 @@
 (ns kami.eizo.timeline-test
   (:require [kami.eizo.timeline :as tl]
             [kami.eizo.timeline.timecode :as tc]
-            #?(:clj  [clojure.test :refer [deftest is]]
+            #?(:clj  [kotoba.test :refer [deftest is]]
                :cljs [cljs.test :refer [deftest is] :include-macros true])))
 
 ;; c1 [0,120) -- 15fr dissolve -- c2 [105,195) -- 10fr dissolve -- c3 [185,335)
